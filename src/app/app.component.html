@@ -1,0 +1,46 @@
+<body class="chatAI-body">
+
+<header id="chatAI-header" class="chatAI-header">
+  <h1 id="chatAI-title" class="chatAI-title">ChatAI</h1>
+  
+</header>
+
+
+<section id="chatAI-main-container" class="chatAI-main-container">
+
+  <ul class="chatAI-response-list">
+
+    <li id="chatAI-response-item-01" class="chatAI-response-item chatAI-response-system">
+      <span class="chatAI-response-icon"></span>
+      <span class="chatAI-response-text">Hello, how can I help you today?</span>
+    </li>
+
+       <div *ngFor="let info of chatInfo;let i=index">
+         <li id="chatAI-response-item-02" class="chatAI-response-item chatAI-response-user">
+         <span class="chatAI-response-icon"><img src="/app/resources/images/customer.png"/></span>
+      <span class="chatAI-response-text" >
+      {{info.userInput }}
+      </span>
+      </li>
+         <li   id="chatAI-response-item-03" class="chatAI-response-item chatAI-response-system">
+           <span class="chatAI-response-icon"></span>
+           <span class="chatAI-response-text"> {{info.description }}  </span>
+         </li>
+        
+     </div>
+      
+
+    <li id="chatAI-response-typing"  *ngIf="Loading"  class="chatAI-response-item chatAI-response-system chatAI-response-typing">
+      <span class="chatAI-response-icon"></span>
+      <span class="chatAI-response-text"></span>
+    </li>
+
+
+  </ul>
+
+</section>
+
+<footer id="chatAI-footer" class="chatAI-footer">
+  <input type="text"  [(ngModel)]="txtChat" class="chatAI-command-input" (keypress)="getLoading()" (keyup.enter)="getResponse()" />
+</footer>
+</body>
