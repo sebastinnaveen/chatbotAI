@@ -1,10 +1,10 @@
-import { ChatAIPage } from './app.po';
+import { ChatbotPage } from './app.po';
 
-describe('chat-ai App', function() {
-  let page: ChatAIPage;
+describe('chatbot App', function() {
+  let page: ChatbotPage;
 
   beforeEach(() => {
-    page = new ChatAIPage();
+    page = new ChatbotPage();
   });
 
   it('should display message saying app works', () => {

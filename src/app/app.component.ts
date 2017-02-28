@@ -2,6 +2,13 @@ import { Component,NgModule  } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Observable } from 'rxjs/Observable';
 import { ChatService } from './ChatService';
+import { Result } from './result.interface';
+
+
+//import {ApiAiClient, ApiAiStreamClient} from "api-ai-javascript";
+import {ApiAiClient} from "api-ai-javascript/ApiAiClient"
+
+
 
 @NgModule({
   imports: [CommonModule]
@@ -29,9 +36,31 @@ export class AppComponent {
   public Loading = false;
   public LoadingMic = false;
   chatInfo = [ ];
+  public result1 : Result;
   constructor (private oService: ChatService) {}
  getResponse()
 {
+	console.log('11');
+	
+
+const client = new ApiAiClient({accessToken: '51f029f2bf914cb1bd56d5ca8dee3d80'});
+//const client = new ApiAiClient({accessToken: '51f029f2bf914cb1bd56d5ca8dee3d80', streamClientClass: ApiAiStreamClient});
+//var result1 = { action: '', resolvedQuery: '', speech: '', fulfillment: { speech: '' } }
+
+
+client
+.textRequest('Hello!')
+    .then((response) => {
+	//var jsonRes = JSON.parse(response.to);
+//	console.log('test',result1);
+	console.log('resp=',response.result);
+	//result1 = response.result;
+	//console.log('resp=',result1);
+	}) 
+    .catch((error) => {console.log('33');})
+
+	
+	
     let oChatInformation = new ChatInformation();
     console.log(this.txtChat);
 
@@ -77,4 +106,6 @@ getResponseVoice()
   this.LoadingMic =true;
 
 }
+
+
 }
