@@ -2,7 +2,7 @@ import { Component,NgModule  } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Observable } from 'rxjs/Observable';
 import { ChatService } from './ChatService';
-import { Result } from './result.interface';
+import { ApiAiResult } from './result.interface';
 
 
 //import {ApiAiClient, ApiAiStreamClient} from "api-ai-javascript";
@@ -36,46 +36,79 @@ export class AppComponent {
   public Loading = false;
   public LoadingMic = false;
   chatInfo = [ ];
-  public result1 : Result;
-  constructor (private oService: ChatService) {}
+  apiairesult = new ApiAiResult();
+  //var result1 = {};
+  constructor (private oService: ChatService) {
+	  
+	   /*result1 = {
+		  action: '',
+		resolvedQuery: '',
+		score: 	0,
+		source: '',
+		fulfillment: {
+			speech: ''
+		},
+		metadata:{},
+		parameters: {
+			simplified: ''
+		}
+	  }*/
+  }
  getResponse()
 {
 	console.log('11');
 	
 
-const client = new ApiAiClient({accessToken: '51f029f2bf914cb1bd56d5ca8dee3d80'});
+const client = new ApiAiClient({accessToken: 'a5edd3dc5fda4aafa9c03886a9babc71'});
 //const client = new ApiAiClient({accessToken: '51f029f2bf914cb1bd56d5ca8dee3d80', streamClientClass: ApiAiStreamClient});
 //var result1 = { action: '', resolvedQuery: '', speech: '', fulfillment: { speech: '' } }
 
+ 
 
-client
-.textRequest('Hello!')
-    .then((response) => {
-	//var jsonRes = JSON.parse(response.to);
-//	console.log('test',result1);
-	console.log('resp=',response.result);
-	//result1 = response.result;
-	//console.log('resp=',result1);
-	}) 
-    .catch((error) => {console.log('33');})
-
-	
-	
-    let oChatInformation = new ChatInformation();
-    console.log(this.txtChat);
 
    if(this.txtChat) {
 
-     oChatInformation.userInput = this.txtChat;
+    
 
      this.Loading = true;
      //Calling restful service
 
      console.log('before service');
 
-     oChatInformation.name = "Fios Offers";
-     oChatInformation.url= "http://www.verizon.com/";
-     oChatInformation.description = "Fios triple play offers $69.99 /mo"
+    let oChatInformation = new ChatInformation();
+    console.log(this.txtChat);
+	 oChatInformation.userInput = this.txtChat;
+client
+.textRequest(this.txtChat)
+    .then((response) => {
+	//var jsonRes = JSON.parse(response.to);
+	//console.log('test',result1);
+	//console.log('resp=', JSON.stringify(response.result)); 
+	var jsonStr = JSON.stringify(response.result);
+	var jsonObj = JSON.parse(jsonStr);
+	console.log('new=',jsonStr);
+	
+	//oChatInformation.name = "Fios Offers";
+     //oChatInformation.url= "http://www.verizon.com/";
+     oChatInformation.description = jsonObj.fulfillment.speech;
+	  oChatInformation.action="";
+	  oChatInformation.url ="";
+	 if(jsonObj.fulfillment.data.text)
+	 {
+		 oChatInformation.action="final";
+		 oChatInformation.name="Please find your details...";
+		console.log("data text =",jsonObj.fulfillment.data.text);
+		oChatInformation.description = jsonObj.fulfillment.data.text;
+		
+		if(jsonObj.fulfillment.data.url)
+			oChatInformation.url = jsonObj.fulfillment.data.url;
+	 }
+	 
+	//this.apiairesult = response.result.fulfillment;
+	//result1 = response.result;
+	//console.log('resp=',result1);
+	}) 
+    .catch((error) => {console.log(error);})
 
      
 
@@ -95,12 +128,7 @@ client
    }
 }
 
-  getLoading()
-  {
-     console.log('in loading');
-    this.Loading =true;
 
-  }
 getResponseVoice()
 {
   this.LoadingMic =true;

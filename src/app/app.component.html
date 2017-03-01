@@ -22,25 +22,71 @@
       {{info.userInput }}
       </span>
       </li>
+	  <div *ngIf="info.action == ''">
          <li   id="chatAI-response-item-03" class="chatAI-response-item chatAI-response-system">
            <span class="chatAI-response-icon"></span>
            <span class="chatAI-response-text"> {{info.description }}  </span>
          </li>
-        
+			</div>
+	 <div *ngIf="info.action == 'final'">
+        <li class="chatAI-response-item chatAI-response-system chatAI-response-card">
+		<span class="chatAI-card-header">{{info.name}}</span>
+		<span class="chatAI-card-content">{{info.description}}</span>
+		<span class="chatAI-card-footer" *ngIf="info.url != ''"> <a href='{{info.url}}'>{{info.url}}</a></span>
+		</li>
+		</div>
      </div>
-      
-
-    <li id="chatAI-response-typing"  *ngIf="Loading"  class="chatAI-response-item chatAI-response-system chatAI-response-typing">
-      <span class="chatAI-response-icon"></span>
-      <span class="chatAI-response-text"></span>
-    </li>
-
 
   </ul>
-
 </section>
-
+<div id='divError'></div>
 <footer id="chatAI-footer" class="chatAI-footer">
-  <input type="text"  [(ngModel)]="txtChat" class="chatAI-command-input" (keypress)="getLoading()" (keyup.enter)="getResponse()" />
+  <input type="text"  [(ngModel)]="txtChat" class="chatAI-command-input" (keyup.enter)="getResponse()" /> <br> <br>
+  <div > <img src="/app/resources/images/mic.png" style='width:50px;height:50px;margin-left:250px' onclick='startSpeech();'/> </div>
 </footer>
+
+
 </body>
+<script>
+
+function startSpeech()
+{
+  var r = document.getElementById('txtChat');
+  var err = document.getElementById('divError');
+  
+    if('webkitSpeechRecognition' in window)
+	{
+		var speechRecognizer = new webkitSpeechRecognition();
+		speechRecognizer.continous = true;
+		speechRecognizer.interimResults=true;
+		speechRecognizer.lang='en-US';
+		speechRecognizer.start();
+		
+		var finalScript = '';
+		speechRecognizer.onresult = function(event)
+		 {
+			for(i=event.resultIndex;i<event.results.length;i++)
+			{
+				var transcript = event.results[i][0].transcript;
+				transcript.replace("\n","<br>");
+				if(event.results[i].isFinal)
+				 {
+				    finalScript +=transcript;
+				 }
+				 else
+				 {
+				  interimTranscripts += transcript;
+				 }
+			}
+			r.innerText = finalScript+interimTranscripts;
+		 };
+		 speechRecognizer.onerror = function(event)
+		 {
+		    err.innerHTML = error;
+		 };
+	}
+	else{
+	   err.innerHTML = "Your browser does not support;"
+	}
+}
+</script>
