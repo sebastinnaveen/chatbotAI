@@ -249,3 +249,12 @@ section.chatAI-recording .chatAI-recording-icon img{
     padding: 0.8em 0;
     cursor: pointer;
 }
+.findmoredetails {
+	margin-bottom: 4px;
+	font-weight: bold;
+	
+}
+.detailsview {
+	font-size: 15px;
+	font-weight: bold;
+}
